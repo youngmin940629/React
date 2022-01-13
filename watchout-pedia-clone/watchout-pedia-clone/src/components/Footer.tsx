@@ -5,7 +5,7 @@ const Base = styled.footer`
   display: block;
   box-sizing: border-box;
   width: 100%;
-`;
+`
 
 const Section = styled.section`
   background-color: #1c1d1f;
@@ -26,17 +26,17 @@ const Summary = styled.span`
   font-size: 19px;
   font-weight: 500;
   line-height: 22px;
-  text-align: center: 
+  text-align: center;
 `;
 
-const Empahsis = styled.em`
+const Emphasis = styled.em`
   color: #ff0558;
   font-size: 19px;
   font-weight: 500;
   line-height: 22px;
 `;
 
-const Container= styled.section`
+const Container = styled.section`
   background: #1c1d1f;
   padding: 20px 0 38px;
 `;
@@ -46,17 +46,11 @@ const ContentWrapper = styled.div`
   margin: 0 60px;
 `;
 
-const Left =styled.div``;
+const Left = styled.div``;
 
-const Right = styled.div``;
+const TermsAndPolicy = styled.ul``;
 
-const TermAndPolicy = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
- 
-const TermAndPolicyItem = styled.li`
+const TermsAndPolicyItem = styled.li`
   display: inline-block;
   color: #a5a5a7;
   font-size: 13px;
@@ -77,32 +71,37 @@ const TermAndPolicyItem = styled.li`
   }
 `;
 
+const Right = styled.div``;
+
 const Footer: React.FC = () => {
-  return (
-    <Base>
-      <Section>
-        <Statistics>
-          <Summary>
-            지금까지&nbsp;
-            <Empahsis>* 644,934,343 개의 평가가</Empahsis>
-            &nbsp;쌓였어요.
-          </Summary>
-        </Statistics>
-        <Container>
-          <ContentWrapper>
-            <Left>
-              <TermAndPolicy>
-                <TermAndPolicyItem>서비스 이용약관</TermAndPolicyItem>
-                <TermAndPolicyItem>개인정보 처리방침</TermAndPolicyItem>
-                <TermAndPolicyItem>회사 정보</TermAndPolicyItem>
-              </TermAndPolicy>
-            </Left>
-            <Right />
-          </ContentWrapper>
-        </Container>
-      </Section>
-    </Base>
-  )
+
+ return (
+   <Base>
+     <Section>
+       <Statistics>
+         <Summary>
+           지금까지&nbsp;
+           <Emphasis>
+             ★ 633,986,967 개의 평가가
+           </Emphasis>
+           &nbsp;쌓였어요.
+         </Summary>
+       </Statistics>
+       <Container>
+         <ContentWrapper>
+           <Left>
+             <TermsAndPolicy>
+               <TermsAndPolicyItem>서비스 이용약관</TermsAndPolicyItem>
+               <TermsAndPolicyItem>개인정보 처리방침</TermsAndPolicyItem>
+               <TermsAndPolicyItem>회사 안내</TermsAndPolicyItem>
+             </TermsAndPolicy>
+           </Left>
+           <Right />
+         </ContentWrapper>
+       </Container>
+     </Section>
+   </Base>
+ )
 }
 
 export default Footer;

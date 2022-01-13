@@ -1,4 +1,4 @@
-import axiosInstance from "./index";
+import axiosInstance from './index';
 
 export const latestApi = () => axiosInstance.get('/tv/latest');
 
@@ -10,8 +10,8 @@ export const popularApi = () => axiosInstance.get('/tv/popular');
 
 export const topRatedApi = () => axiosInstance.get('/tv/top_rated');
 
-export const detailApi = (tvId:string) => axiosInstance.get(`/tv/${tvId}`);
+export const detailApi = (id: string) => axiosInstance.get(`/tv/${id}`);
 
-export const similarApi = (tvId:string) => axiosInstance.get(`/tv/${tvId}/similar`);
+export const similarApi = (id: string) => axiosInstance.get(`/tv/${id}/similar`);
 
-export const searchApi = (query:string) => axiosInstance.get(`/search/tv?query=${query}}`);
+export const searchApi = (query: string) => axiosInstance.get(`/search/tv?query=${query}`);

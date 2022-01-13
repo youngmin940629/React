@@ -1,16 +1,24 @@
-import React from 'react';
-import styled from "@emotion/styled";
+import React, { useRef, useState } from 'react';
+import styled from '@emotion/styled/macro';
 import { AiOutlineSearch } from 'react-icons/ai';
+import { useRecoilState } from 'recoil';
+
+import { loginModalOpenState, signupModalOpenState } from '../features/app/atom';
+
+import useMovieSearch from '../features/movie/useMovieSearch';
+import useClickOutside from '../hooks/useClickOutside';
 
 const Base = styled.header`
+  width: 100%;
+  margin: 0 auto;
+  height: 62px;
   position: fixed;
   top: 0;
   left: 0;
-  background: rgb(255,255,255);
+  background-color: rgb(255, 255, 255);
   text-align: center;
-  box-shadow: rgb(0 0 0 / 0%) 0px 1px 0px 0px;
-  width: 100%;
-  height: 62px;
+  box-shadow: rgb(0 0 0 / 8%) 0px 1px 0px 0px;
+  transition: background-color 200ms ease 0s;
   z-index: 10;
 `;
 
@@ -19,14 +27,14 @@ const Navigation = styled.nav`
   max-width: 1200px;
 `;
 
-const MenuListWrapper = styled.div``;
+const MenuListWrapper = styled.div`
+`;
 
 const MenuList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
-  overflow: hidden;
 `;
 
 const Menu = styled.li`
@@ -35,13 +43,13 @@ const Menu = styled.li`
   height: 62px;
   flex-shrink: 0;
   &:not(:first-child) {
-    margin-left: 24px;
-}
+    margin: 0 0 0 24px;
+  }
 `;
 
-const MenuButton = styled.button<{ active? : boolean }>`
+const MenuButton = styled.button<{ active?: boolean }>`
   font-size: 15px;
-  color: ${({ active }) => active ? 'rgb(53, 53, 53)' : 'rgb(126, 126, 126'};
+  color: ${({ active }) => active ? 'rgb(53, 53, 53)' : 'rgb(126, 126, 126)'};
   cursor: pointer;
   border: none;
   background: none;
@@ -54,6 +62,7 @@ const SearchMenu = styled.li`
   height: 62px;
   flex-shrink: 1;
   margin: 0 0 0 auto;
+  transition: all 0.5s ease 0s;
   position: relative;
 `;
 
@@ -68,7 +77,7 @@ const TextLogo = styled.h1`
     color: rgb(255, 47, 110);
   }
   > span:not(.primary) {
-    color: #222
+    color: #222;
   }
 `;
 
@@ -77,9 +86,46 @@ const SearchContainer = styled.div`
   width: 100%;
 `;
 
-const SearchFromWrapper = styled.div``;
+const SearchResultWrapper = styled.div`
+  position: absolute;
+  top: 60px;
+  left: 0;
+  z-index: 9999999;
+  background-color: #fff;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+  max-height: 480px;
+  overflow-y: scroll;
+`;
 
-const SearchForm = styled.div``;
+const SearchResultListItem = styled.li`
+  padding: 4px 6px;
+  box-sizing: border-box;
+  color: #222;
+  font-size: 16px;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  &:hover {
+    background-color: #eee;
+  }
+`;
+
+const SearchResultList = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+`;
+
+const SearchFormWrapper = styled.div``;
+
+const SearchForm = styled.form``;
 
 const SearchLabel = styled.label`
   background: rgb(245, 245, 247);
@@ -95,7 +141,7 @@ const SearchLabel = styled.label`
 const SearchInput = styled.input`
   font-size: 14px;
   font-weight: 400;
-  backgroung: transparent;
+  background: transparent;
   width: 100%;
   padding: 0 0 0 8px;
   border: 0;
@@ -124,16 +170,37 @@ const SignUp = styled.button`
   background: transparent;
   color: rgb(53, 53, 53);
   font-size: 14px;
-  border: 1px solid rgba(116, 116, 123, 0.5)
+  border: 1px solid rgba(116, 116, 123, 0.5);
   cursor: pointer;
   margin: 15px 0;
 `;
 
-const Header: React.FC = () => {
-  const handleKeyword = () => {
+interface Props {}
 
+const Header: React.FC<Props> = () => {
+  const searchRef = useRef<HTMLDivElement>(null);
+  const pathname = window.location.pathname;
+
+  const [searchKeyword, setSearchKeyword] = useState<string>('');
+
+  const [isLoginModalOpen, setIsLoginModalOpen] = useRecoilState(loginModalOpenState);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useRecoilState(signupModalOpenState);
+
+  const handleLoginModal = (): void => {
+    !isLoginModalOpen && setIsLoginModalOpen(true);
   }
 
+  const handleSignup = (): void => {
+    !isSignupModalOpen && setIsSignupModalOpen(true);
+  }
+
+  const handleKeyword = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setSearchKeyword(e.target.value);
+  }
+
+  useClickOutside(searchRef, () => setSearchKeyword(''));
+
+  const { data: searchResult } = useMovieSearch(searchKeyword);
 
   return (
     <Base>
@@ -141,7 +208,7 @@ const Header: React.FC = () => {
         <MenuListWrapper>
           <MenuList>
             <Menu>
-              <Link href='/'>
+              <Link href="/">
                 <TextLogo>
                   <span className="primary">WATCHOUT</span>
                   <span>PEDIA</span>
@@ -150,29 +217,45 @@ const Header: React.FC = () => {
             </Menu>
             <Menu>
               <Link href="/">
-                <MenuButton>영화</MenuButton>
+                <MenuButton active={pathname === '/'}>영화</MenuButton>
               </Link>
+            </Menu>
+            <Menu>
               <Link href="/tv">
-                <MenuButton>TV 프로그램</MenuButton>
+                <MenuButton active={pathname === '/tv'}>TV 프로그램</MenuButton>
               </Link>
             </Menu>
             <SearchMenu>
               <SearchContainer>
-                <SearchFromWrapper>
+                <SearchFormWrapper ref={searchRef}>
                   <SearchForm>
                     <SearchLabel>
                       <AiOutlineSearch />
-                      <SearchInput placeholder='콘텐츠, 인물, 컬렉션, 유저를 검색해보세요.' onChange={handleKeyword}/>
+                      <SearchInput
+                        placeholder="콘텐츠, 인물, 컬렉션, 유저를 검색해보세요."
+                        onChange={handleKeyword}
+                      />
                     </SearchLabel>
                   </SearchForm>
-                </SearchFromWrapper>
+                </SearchFormWrapper>
               </SearchContainer>
+              <SearchResultWrapper>
+                <SearchResultList>
+                  {
+                    searchResult?.results.map((searchResultItem) => (
+                      <Link href={`/movie/${searchResultItem.id}`} key={searchResultItem.id}>
+                        <SearchResultListItem>{searchResultItem.title}</SearchResultListItem>
+                      </Link>
+                    ))
+                  }
+                </SearchResultList>
+              </SearchResultWrapper>
             </SearchMenu>
             <Menu>
-              <SignIn>로그인</SignIn>
+              <SignIn onClick={handleLoginModal}>로그인</SignIn>
             </Menu>
             <Menu>
-              <SignUp>회원가입</SignUp>
+              <SignUp onClick={handleSignup}>회원가입</SignUp>
             </Menu>
           </MenuList>
         </MenuListWrapper>
