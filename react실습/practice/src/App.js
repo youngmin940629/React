@@ -8,12 +8,14 @@ import ClassComponent from './components/2-5.state/ClassComponent';
 import ClassComponent2 from './components/2-6.LifeCycle/ClassComponent';
 import FunctionalComponent from './components/2-5.state/FunctionalComponent';
 import GoogleLogin from './components/googlelogin'
+import List from './components/2-9.list/List'
 
 function App() {
   return (
     <div className="App">
+      <List />
       {/* <Condition /> */}
-      <GoogleLogin />
+      {/* <GoogleLogin /> */}
       {/* <Event /> */}
       {/* <ClassComponent2 /> */}
       {/* <FunctionalComponent /> */}
