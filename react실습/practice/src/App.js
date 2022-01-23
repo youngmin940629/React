@@ -17,10 +17,14 @@ import ThankyouDialog from './components/3-6.composition2/ThankyouDialog';
 import Input from './components/3-7.HOC/Input'
 import Button from './components/3-7.HOC/Button'
 import Memo from './components/3-8.Memorization/Memo'
+import Example from './components/3-11.Portal/Example'
+import Component from './components/3-14.PropTypes/Component'
 
 function App() {
   return (
     <div className="App">
+      {/* <Component /> */}
+      {/* <Example /> */}
       <Memo />
       {/* <Input />
       <br />
